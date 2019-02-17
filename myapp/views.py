@@ -5,6 +5,7 @@ import simplejson as json
 import pickle
 from sklearn.feature_extraction.text import CountVectorizer
 import pandas as pd
+import os
 from sklearn.model_selection import train_test_split
 
 def hello(request):
@@ -18,13 +19,15 @@ def classifiy(request):
          data = json_data['Tweet']
       except KeyError:
           HttpResponseServerError("Malformed data!")
-      df = pd.read_csv('C:\\xampp\\htdocs\\myproject\\myapp\\new.csv')
+      THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
+      my_file = os.path.join(THIS_FOLDER, 'new.csv')
+      df = pd.read_csv(my_file)
       col = ['Label', 'Text']
       df = df[col]
       X_train, X_test, y_train, y_test = train_test_split(df['Text'], df['Label'], random_state = 0)
       count_vect = CountVectorizer()
       X_train_counts = count_vect.fit_transform(X_train)
-      filename = 'C:\\xampp\\htdocs\\myproject\\myapp\\finalized_model.sav'
+      filename = os.path.join(THIS_FOLDER, 'finalized_model.sav')
       loaded_model = pickle.load(open(filename, 'rb'))
       new = []
       for index, tweet in enumerate(data):
