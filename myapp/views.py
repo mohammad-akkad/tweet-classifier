@@ -7,6 +7,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 import pandas as pd
 import os
 from sklearn.model_selection import train_test_split
+from langdetect import detect
 
 def hello(request):
    text = "<h1>welcome to my app number %s!</h1>"
@@ -31,6 +32,9 @@ def classifiy(request):
       loaded_model = pickle.load(open(filename, 'rb'))
       new = []
       for index, tweet in enumerate(data):
-         new.append({'class':loaded_model.predict(count_vect.transform([tweet['text']]))[0],'id':tweet['id']})
+          if((detect(tweet['text']) == 'ar') or (detect(tweet['text']) == 'en') or (detect(tweet['text']) == 'tr')):
+             new.append({'class':loaded_model.predict(count_vect.transform([tweet['text']]))[0],'id':tweet['id']})
+          else:
+              new.append({'class':'notSupported','id':tweet['id']})
 
       return HttpResponse(json.dumps(new))
