@@ -16,9 +16,13 @@ def add(request):
         HttpResponseServerError("Malformed data!")
     lang = detect(data['text'])
     THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
-    my_file = os.path.join(THIS_FOLDER, 'data-'+lang+'.csv')
-    df = u'"'+data['text']+ '"'+ ',' + data['class'] + '\n'
+    if((lang == 'ar') or (lang == 'en') or (lang == 'tr')):
+      my_file = os.path.join(THIS_FOLDER, 'data-'+lang+'.csv')
+    else:
+      my_file = os.path.join(THIS_FOLDER, 'data-other'+'.csv')
+    df = data['id']+','+u'"'+data['text']+ '"'+ ',' + data['class'] + '\n'
+
     with open(my_file, 'a',encoding="utf-8") as f:
         f.write(df)
 
-   return HttpResponse({'data-'+lang})
+   return HttpResponse({'true'})
