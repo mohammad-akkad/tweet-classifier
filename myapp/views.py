@@ -32,9 +32,10 @@ def classifiy(request):
       loaded_model = pickle.load(open(filename, 'rb'))
       new = []
       for index, tweet in enumerate(data):
-          if((detect(tweet['text']) == 'ar') or (detect(tweet['text']) == 'en') or (detect(tweet['text']) == 'tr')):
-             new.append({'class':loaded_model.predict(count_vect.transform([tweet['text']]))[0],'id':tweet['id']})
-          else:
-              new.append({'class':'notSupported','id':tweet['id']})
+          if(tweet['text'] != ''):
+              if((detect(tweet['text']) == 'ar') or (detect(tweet['text']) == 'en') or (detect(tweet['text']) == 'tr')):
+                 new.append({'class':loaded_model.predict(count_vect.transform([tweet['text']]))[0],'id':tweet['id']})
+              else:
+                  new.append({'class':'notSupported','id':tweet['id']})
 
       return HttpResponse(json.dumps(new))

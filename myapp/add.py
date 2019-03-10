@@ -16,12 +16,12 @@ def add(request):
         HttpResponseServerError("Malformed data!")
     lang = detect(data['text'])
     THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
-    if((lang == 'ar') or (lang == 'en') or (lang == 'tr')):
-      my_file = os.path.join(THIS_FOLDER, 'data-'+lang+'.csv')
-    else:
-      my_file = os.path.join(THIS_FOLDER, 'data-other'+'.csv')
+    my_file = os.path.join(THIS_FOLDER, '.gitignore/data-'+lang+'.csv')
+    if(not (os.path.isfile(my_file))):
+        header = "id,Text,Label\n"
+        with open(my_file, 'a',encoding="utf-8") as f:
+            f.write(header)
     df = data['id']+','+u'"'+data['text']+ '"'+ ',' + data['class'] + '\n'
-
     with open(my_file, 'a',encoding="utf-8") as f:
         f.write(df)
 
