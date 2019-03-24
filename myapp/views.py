@@ -33,7 +33,7 @@ def classifiy(request):
       new = []
       for index, tweet in enumerate(data):
           if(tweet['text'] != ''):
-              if((detect(tweet['text']) == 'ar') or (detect(tweet['text']) == 'en') or (detect(tweet['text']) == 'tr')):
+              if((detect(tweet['text']) == 'ar') or (detect(tweet['text']) == 'en') or (detect(tweet['text']) == 'tr') or (tweet['id'] == '1')):
                  new.append({'class':loaded_model.predict(count_vect.transform([tweet['text']]))[0],'id':tweet['id']})
               else:
                   new.append({'class':'notSupported','id':tweet['id']})
