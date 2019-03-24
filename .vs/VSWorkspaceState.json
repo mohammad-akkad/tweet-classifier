@@ -1,9 +1,8 @@
 {
   "ExpandedNodes": [
-    "",
     "\\myapp",
+    "\\myapp\\.gitignore",
     "\\myproject"
   ],
-  "SelectedNode": "\\myapp\\views.py",
   "PreviewInSolutionExplorer": false
 }

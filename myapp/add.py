@@ -1,4 +1,4 @@
-from langdetect import detect
+import langid
 from django.views.decorators.csrf import csrf_exempt
 import simplejson as json
 import pandas as pd
@@ -14,9 +14,9 @@ def add(request):
         data = json_data['Tweet']
     except KeyError:
         HttpResponseServerError("Malformed data!")
-    lang = detect(data['text'])
+    lang = langid.classify(data['text'])
     THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
-    my_file = os.path.join(THIS_FOLDER, '.gitignore/data-'+lang+'.csv')
+    my_file = os.path.join(THIS_FOLDER, '.gitignore/data-'+lang[0]+'.csv')
     if(not (os.path.isfile(my_file))):
         header = "id,Text,Label\n"
         with open(my_file, 'a',encoding="utf-8") as f:
