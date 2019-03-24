@@ -27,7 +27,7 @@ def classifiy(request):
       col = ['Label', 'Text']
       df = df[col]
       def cleanText(text):
-        text = re.sub(r'\|\|\|', r' ', text) 
+        text = re.sub(r'\|\|\|', r' ', text)
         text = re.sub(r'http\S+', r'<URL>', text)
         text = text.lower()
         text = text.replace('x', '')
@@ -41,7 +41,7 @@ def classifiy(request):
       new = []
       for index, tweet in enumerate(data):
           if(tweet['text'] != ''):
-              if((langid.classify(tweet['text']) == 'ar') or (langid.classify(tweet['text']) == 'en') or (langid.classify(tweet['text']) == 'tr')):
+              if((langid.classify(tweet['text'])[0] == 'ar') or (langid.classify(tweet['text'])[0] == 'en') or (langid.classify(tweet['text'])[0] == 'tr')):
                  new.append({'class':loaded_model.predict(count_vect.transform([tweet['text']]))[0],'id':tweet['id']})
               else:
                   new.append({'class':'notSupported','id':tweet['id']})
