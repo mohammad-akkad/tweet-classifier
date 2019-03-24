@@ -8,6 +8,7 @@ import pandas as pd
 import os
 from sklearn.model_selection import train_test_split
 import langid
+import re
 
 def hello(request):
    text = "<h1>welcome to my app number %s!</h1>"
@@ -21,11 +22,18 @@ def classifiy(request):
       except KeyError:
           HttpResponseServerError("Malformed data!")
       THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
-      my_file = os.path.join(THIS_FOLDER, 'new.csv')
+      my_file = os.path.join(THIS_FOLDER, 'stemm.csv')
       df = pd.read_csv(my_file)
       col = ['Label', 'Text']
       df = df[col]
-      X_train, X_test, y_train, y_test = train_test_split(df['Text'], df['Label'], random_state = 0)
+      def cleanText(text):
+        text = re.sub(r'\|\|\|', r' ', text) 
+        text = re.sub(r'http\S+', r'<URL>', text)
+        text = text.lower()
+        text = text.replace('x', '')
+        return text
+      df['Text'] = df['Text'].apply(cleanText)
+      X_train, X_test, y_train, y_test = train_test_split(df['Text'], df['Label'], random_state = 0,test_size=0.2)
       count_vect = CountVectorizer()
       X_train_counts = count_vect.fit_transform(X_train)
       filename = os.path.join(THIS_FOLDER, 'finalized_model.sav')
