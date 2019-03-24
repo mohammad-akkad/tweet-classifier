@@ -7,7 +7,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 import pandas as pd
 import os
 from sklearn.model_selection import train_test_split
-from langdetect import detect
+import langid
 
 def hello(request):
    text = "<h1>welcome to my app number %s!</h1>"
@@ -33,7 +33,7 @@ def classifiy(request):
       new = []
       for index, tweet in enumerate(data):
           if(tweet['text'] != ''):
-              if((detect(tweet['text']) == 'ar') or (detect(tweet['text']) == 'en') or (detect(tweet['text']) == 'tr')):
+              if((langid.classify(tweet['text']) == 'ar') or (langid.classify(tweet['text']) == 'en') or (langid.classify(tweet['text']) == 'tr')):
                  new.append({'class':loaded_model.predict(count_vect.transform([tweet['text']]))[0],'id':tweet['id']})
               else:
                   new.append({'class':'notSupported','id':tweet['id']})
