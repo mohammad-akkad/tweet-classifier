@@ -32,6 +32,55 @@ def classifiy(request):
         text = text.lower()
         text = text.replace('x', '')
         return text
+      def stemming(text):
+         tokenizer = nltk.tokenize.TreebankWordTokenizer()
+         tokens = tokenizer.tokenize(textString)
+         stemmer = nltk.stem.WordNetLemmatizer()
+         stemmed = " ".join(stemmer.lemmatize(token) for token in tokens)
+         return stemmed
+      def generalzing(text):
+         genderReplacment = {
+            'girl',
+            'female',
+            'male',
+            'men',
+            'boy',
+            'he',
+            'she',
+            'guy',
+             }
+         religionReplacment = {
+            'jainism',
+            'buddhism',
+            'hinduism',
+            'sikhism',
+            'christianity',
+            'catholicism',
+            'protestantism',
+            'restorationism',
+            'gnosticism',
+            'shiism',
+            'sunnism',
+            'judaism',
+         }
+         followerReplacment = {
+            'christian',
+            'atheist',
+            'hindu',
+            'buddhist',
+            'taoists',
+            'confucianist',
+            'jew',
+            'sikhs'
+         }
+         THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
+         my_file = os.path.join(THIS_FOLDER, 'nationalities.csv')
+         df = pd.read_csv(my_file)
+         nationaitiesGenralizing = re.sub('|'.join(r'\b%s\b' % re.escape(s) for s in df.apply(cleanText)),'muslim',text)
+         genderGenralizing = re.sub('|'.join(r'\b%s\b' % re.escape(s) for s in genderReplacment),'woman',nationaitiesGenralizing)
+         religionGenralizing = re.sub('|'.join(r'\b%s\b' % re.escape(s) for s in religionReplacment),'islam',genderGenralizing)
+         followerGenralizing =  re.sub('|'.join(r'\b%s\b' % re.escape(s) for s in followerReplacment),'muslim',religionGenralizing)
+         return followerGenralizing
       df['Text'] = df['Text'].apply(cleanText)
       X_train, X_test, y_train, y_test = train_test_split(df['Text'], df['Label'], random_state = 0,test_size=0.2)
       count_vect = CountVectorizer()
@@ -42,6 +91,9 @@ def classifiy(request):
       for index, tweet in enumerate(data):
           if(tweet['text'] != ''):
               if((langid.classify(tweet['text']) == 'ar') or (langid.classify(tweet['text']) == 'en') or (langid.classify(tweet['text']) == 'tr')):
+                 tweetCleaned = cleanText(tweet['text'])
+                 tweetStemed = stemming(tweetCleaned)
+                 tweetGeneralized = generalzing(tweetStemed)
                  new.append({'class':loaded_model.predict(count_vect.transform([tweet['text']]))[0],'id':tweet['id']})
               else:
                   new.append({'class':'notSupported','id':tweet['id']})
