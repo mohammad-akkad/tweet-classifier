@@ -94,7 +94,7 @@ def classifiy(request):
                  tweetCleaned = cleanText(tweet['text'])
                  tweetStemed = stemming(tweetCleaned)
                  tweetGeneralized = generalzing(tweetStemed)
-                 new.append({'class':loaded_model.predict(count_vect.transform([tweet['text']]))[0],'id':tweet['id']})
+                 new.append({'class':loaded_model.predict(count_vect.transform(tweetGeneralized))[0],'id':tweet['id']})
               else:
                   new.append({'class':'notSupported','id':tweet['id']})
 
