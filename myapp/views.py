@@ -27,7 +27,7 @@ def classifiy(request):
       col = ['Label', 'Text']
       df = df[col]
       def cleanText(text):
-        text = re.sub(r'\|\|\|', r' ', text) 
+        text = re.sub(r'\|\|\|', r' ', text)
         text = re.sub(r'http\S+', r'<URL>', text)
         text = text.lower()
         text = text.replace('x', '')
