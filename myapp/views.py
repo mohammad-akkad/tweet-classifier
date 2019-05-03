@@ -9,6 +9,7 @@ import os
 from sklearn.model_selection import train_test_split
 import langid
 import re
+import nltk
 
 def hello(request):
    text = "<h1>welcome to my app number %s!</h1>"
@@ -34,7 +35,7 @@ def classifiy(request):
         return text
       def stemming(text):
          tokenizer = nltk.tokenize.TreebankWordTokenizer()
-         tokens = tokenizer.tokenize(textString)
+         tokens = tokenizer.tokenize(text)
          stemmer = nltk.stem.WordNetLemmatizer()
          stemmed = " ".join(stemmer.lemmatize(token) for token in tokens)
          return stemmed
@@ -90,12 +91,12 @@ def classifiy(request):
       new = []
       for index, tweet in enumerate(data):
           if(tweet['text'] != ''):
+              tweetCleaned = cleanText(tweet['text'])
+              tweetStemed = stemming(tweetCleaned)
+              tweetGeneralized = generalzing(tweetStemed)
               if((langid.classify(tweet['text']) == 'ar') or (langid.classify(tweet['text']) == 'en') or (langid.classify(tweet['text']) == 'tr')):
-                 tweetCleaned = cleanText(tweet['text'])
-                 tweetStemed = stemming(tweetCleaned)
-                 tweetGeneralized = generalzing(tweetStemed)
-                 new.append({'class':loaded_model.predict(count_vect.transform(tweetGeneralized))[0],'id':tweet['id']})
+                 new.append({'class':loaded_model.predict(count_vect.transform([tweetGeneralized]))[0],'id':tweet['id']})
               else:
-                  new.append({'class':loaded_model.predict(count_vect.transform([tweet['text']]))[0],'id':tweet['id']})
+                  new.append({'class':loaded_model.predict(count_vect.transform([tweetGeneralized]))[0],'id':tweet['id']})
 
       return HttpResponse(json.dumps(new))
