@@ -44,6 +44,6 @@ def classifiy(request):
               if((langid.classify(tweet['text'])[0] == 'ar') or (langid.classify(tweet['text'])[0] == 'en') or (langid.classify(tweet['text'])[0] == 'tr')):
                  new.append({'class':loaded_model.predict(count_vect.transform([tweet['text']]))[0],'id':tweet['id']})
               else:
-                  new.append({'class':'notSupported','id':tweet['id']})
+                  new.append({'class':loaded_model.predict(count_vect.transform([tweet['text']]))[0],'id':tweet['id']})
 
       return HttpResponse(json.dumps(new))
