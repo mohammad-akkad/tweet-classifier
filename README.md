@@ -24,6 +24,7 @@ and object has to have three attributes  id, class, and text
 ## Authors
 
 * **Muhammed Akkad** - [linkedIn](https://www.linkedin.com/in/mohamad-akkad-5a923a149/)
+* **Dzeneta Hajdarpasic** - [linkedIn](https://www.linkedin.com/in/dzeneta-hajdarpasic-a2290a18a)
 
 ## References
 Data set was collected by 
